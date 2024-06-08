@@ -1,0 +1,1 @@
+cat dirs.txt |xargs mkdir

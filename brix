@@ -1,0 +1,48 @@
+# See https://superuser.com/questions/523562/script-specific-autocomplete-in-shell
+
+BRICKS_IDE_VS_HOME=$HOME/ide/vs/bricks-ide
+
+
+# Create a folder if it does not exist: "Usage: create-folder somefolder"
+create-folder(){
+    if [ ! -d "$1" ]
+    then
+        echo "Creating folder:" $1 
+        mkdir $1
+    fi
+}
+
+# Start bricks-ide with some name: "Usage: bricks-ide somename"
+brix () {
+
+    local folder
+    # if [[ -v $1 ]]
+
+    if [ -v $1 ]
+    then
+        echo "Switch to default workspace"
+        folder="default"
+    else
+        folder=$1
+    fi
+    local IDE_HOME="$BRICKS_IDE_VS_HOME/$folder"
+    echo "IDE_HOME:" $IDE_HOME
+
+    create-folder $IDE_HOME
+    create-folder $IDE_HOME/extension
+    create-folder $IDE_HOME/user-data
+
+    echo "code --extensions-dir $IDE_HOME/extension --user-data-dir $IDE_HOME/user-data . & "
+    $(code --extensions-dir $IDE_HOME/extension --user-data-dir "$IDE_HOME"/user-data . & )
+}
+
+brix $1
+
+# _bricks_completion()
+# {
+#    COMPREPLY=($(compgen -W "default sandbox java scala python go azure llama gpt ai crypto" "${COMP_WORDS[1]}"))
+# }
+
+# complete -F _bricks_completion brix
+
+

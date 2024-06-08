@@ -1,0 +1,6 @@
+# See in your path a script called `brix`
+
+_brix_completion()
+{
+   COMPREPLY=($(compgen -W "default sandbox java scala python go azure llama gpt ai crypto" "${COMP_WORDS[1]}"))
+} && complete -F _brix_completion brix
