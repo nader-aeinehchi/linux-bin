@@ -2,5 +2,5 @@
 
 _brix_completion()
 {
-   COMPREPLY=($(compgen -W "default sandbox java scala python go azure llama gpt ai crypto" "${COMP_WORDS[1]}"))
+   COMPREPLY=($(compgen -W "default sandbox java scala python go rust azure llama gpt ai crypto draw oci infra" "${COMP_WORDS[1]}"))
 } && complete -F _brix_completion brix
