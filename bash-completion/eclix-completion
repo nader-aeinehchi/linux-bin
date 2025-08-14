@@ -1,0 +1,49 @@
+#!/bin/bash
+
+# This script provides autocompletion for your launch script.
+# To use it, source this file in your .bashrc or .bash_profile.
+# For example:
+# source /path/to/_eclix_completion
+
+_eclix_completion()
+{
+    local cur_word prev_word type_list
+    COMPREPLY=()
+    cur_word="${COMP_WORDS[COMP_CWORD]}"
+    prev_word="${COMP_WORDS[COMP_CWORD-1]}"
+
+    # Define the primary options for your script.
+    local opts="--ide --java --workspace --help -h"
+
+    # Define the options that are expected after a specific flag.
+    case "${prev_word}" in
+        --ide)
+            # Autocomplete with a predefined list of IDE options.
+            local ide_options="default brix antlr"
+            COMPREPLY=( $(compgen -W "${ide_options}" -- "${cur_word}") )
+            return 0
+            ;;
+        --java)
+            # This part dynamically lists the directories inside your "$HOME/java/jdk/" folder.
+            # It only suggests the folder names, like "17" or "21".
+            local java_versions=$(ls -d $HOME/java/jdk/*/ 2>/dev/null | xargs -n 1 basename)
+            COMPREPLY=( $(compgen -W "${java_versions}" -- "${cur_word}") )
+            return 0
+            ;;
+        --workspace)
+            # Autocomplete with a predefined list of workspace options.
+            local workspace_options="default"
+            COMPREPLY=( $(compgen -W "${workspace_options}" -- "${cur_word}") )
+            return 0
+            ;;
+    esac
+
+    # This part handles the completion for the main options.
+    # It checks for a match between the current word and the list of options.
+    COMPREPLY=( $(compgen -W "${opts}" -- "${cur_word}") )
+    return 0
+}
+
+# The `complete` command is what ties the autocompletion function to your script.
+# Replace `your_script_name.sh` with the actual name of your script.
+complete -F _eclix_completion eclix

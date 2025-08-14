@@ -1,0 +1,111 @@
+# See https://superuser.com/questions/523562/script-specific-autocomplete-in-shell
+
+IDE_ROOT=$HOME/ide/eclipse/eclix-ide
+WORKSPACE_ROOT="$HOME/dev/workspace"
+
+# Create a folder if it does not exist: "Usage: create-folder somefolder"
+create-folder(){
+    if [ ! -d "$1" ]
+    then
+        echo "Creating folder:" $1 
+        mkdir $1
+    fi
+}
+
+
+# A script to parse command-line options for Java home, ide, and user data.
+
+# --- Usage Function ---
+# This function is called when the user needs help or provides incorrect arguments.
+usage() {
+  echo "Usage: $0 [--ide <IDE>] [--java <java-version>] --workspace <WORKSPACE>"
+  echo ""
+  echo "Options:"
+  echo "  --ide <IDE>  Specify the execution ide for including different plugins (default: default)."
+  echo "  --java <java-version>  Specify the Java home (default: current as in $HOME/java/jdk/current)."
+  echo "  --workspace <WORKSPACE>   Specify the path to a user data file (required)."
+  exit 1
+}
+
+# --- Default Values ---
+# Initialize variables with default values.
+JAVA_HOME="$HOME/java/jdk/current"
+IDE="default"
+WORKSPACE=""
+
+# --- Argument Parsing Loop ---
+# This loop processes all command-line arguments.
+while [[ "$#" -gt 0 ]]; do
+  case $1 in
+    --ide)
+      if [[ -z "$2" ]]; then
+        echo "Error: Missing value for --ide"
+        usage
+      fi
+      IDE="$2"
+      shift
+      shift
+      ;;
+    --java)
+      # Check if the value for the option is provided.
+      if [[ -z "$2" ]]; then
+        echo "Error: Missing value for --java"
+        usage
+      fi
+      JAVA_HOME="$HOME/java/jdk/$2"
+      shift # Move past the option name
+      shift # Move past the option value
+      ;;
+    --workspace)
+      if [[ -z "$2" ]]; then
+        echo "Error: Missing value for --workspace"
+        usage
+      fi
+      WORKSPACE="$2"
+      shift
+      shift
+      ;;
+    -h|--help)
+      usage
+      ;;
+    *)
+      # Handle any unrecognized options.
+      echo "Error: Unknown option $1"
+      usage
+      ;;
+  esac
+done
+
+# --- Validation ---
+# Ensure that all required arguments have been set.
+if [[ -z "$WORKSPACE" ]]; then
+  echo "Error: The --workspace option is required."
+  usage
+fi
+
+WORKSPACE_FOLDER="$WORKSPACE_ROOT/$WORKSPACE"
+JAVA_APP="$JAVA_HOME/bin/java"
+IDE_APP="$IDE_ROOT/$IDE/eclipse"
+
+# --- Main Script Logic ---
+# At this point, all variables are set and validated. You can add your main
+# script logic here. For this example, we'll just print the values.
+echo "Script successfully parsed the following options:"
+echo "------------------------------------------------"
+echo "IDE:              $IDE_APP"
+echo "Java:             $JAVA_APP"
+echo "Workspace Folder: $WORKSPACE_FOLDER"
+
+create-folder $WORKSPACE_FOLDER
+echo "Running: $IDE_APP -vm $JAVA_APP -data $WORKSPACE_FOLDER . & "
+
+# $($IDE_APP -vm $JAVA_APP -data $WORKSPACE_FOLDER . &)
+
+# _eclix_completion()
+# {
+#    COMPREPLY=($(compgen -W "default sandbox java scala python go azure llama gpt ai crypto" "${COMP_WORDS[1]}"))
+# }
+
+# complete -F _eclix_completion eclix
+
+
