@@ -99,13 +99,4 @@ echo "Workspace Folder: $WORKSPACE_FOLDER"
 create-folder $WORKSPACE_FOLDER
 echo "Running: $IDE_APP -vm $JAVA_APP -data $WORKSPACE_FOLDER . & "
 
-# $($IDE_APP -vm $JAVA_APP -data $WORKSPACE_FOLDER . &)
-
-# _eclix_completion()
-# {
-#    COMPREPLY=($(compgen -W "default sandbox java scala python go azure llama gpt ai crypto" "${COMP_WORDS[1]}"))
-# }
-
-# complete -F _eclix_completion eclix
-
-
+$($IDE_APP -vm $JAVA_APP -data $WORKSPACE_FOLDER . &)

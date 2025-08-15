@@ -32,7 +32,8 @@ _eclix_completion()
             ;;
         --workspace)
             # Autocomplete with a predefined list of workspace options.
-            local workspace_options="default"
+            # local workspace_options="default"
+            local workspace_options=$(ls -d $HOME/dev/workspace/*/ 2>/dev/null | xargs -n 1 basename)
             COMPREPLY=( $(compgen -W "${workspace_options}" -- "${cur_word}") )
             return 0
             ;;
